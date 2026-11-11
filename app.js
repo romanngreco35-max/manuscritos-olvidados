@@ -29,7 +29,7 @@ function renderizarInicio() {
   manuscritos.forEach((post, indice) => {
     const tarjeta = document.createElement("a");
     tarjeta.className = "card";
-    tarjeta.href = `post.html?id=${encodeURIComponent(post.id)}`;
+    tarjeta.href = `${post.id}.html`;
     tarjeta.style.setProperty("--delay", `${indice * 90}ms`);
     tarjeta.append(
       crearImagen(post.imagen, "card-imagen"),
@@ -42,46 +42,4 @@ function renderizarInicio() {
   });
 }
 
-function establecerTexto(id, texto) {
-  document.getElementById(id).textContent = texto;
-}
-
-function establecerDescripcion(texto) {
-  document.querySelector('meta[name="description"]').setAttribute("content", texto);
-}
-
-function mostrarNoEncontrado() {
-  document.title = "Manuscrito no encontrado | Manuscritos Olvidados";
-  establecerDescripcion("El manuscrito solicitado no existe en el archivo.");
-  establecerTexto("post-numero", "Archivo");
-  establecerTexto("post-titulo", "Manuscrito no encontrado");
-  establecerTexto("post-subtitulo", "Este pergamino se ha perdido entre los muros del archivo.");
-  establecerTexto("post-fecha", "");
-  document.getElementById("post-portada").replaceChildren();
-  document
-    .getElementById("post-narrativa")
-    .replaceChildren(crearElemento("p", "", "El enlace puede estar incompleto o el manuscrito ya no está disponible."));
-}
-
-function renderizarPost() {
-  const id = new URLSearchParams(window.location.search).get("id");
-  const post = manuscritos.find((item) => item.id === id);
-
-  if (!post) {
-    mostrarNoEncontrado();
-    return;
-  }
-
-  document.title = `${post.titulo} | Manuscritos Olvidados`;
-  establecerDescripcion(post.subtitulo);
-  establecerTexto("post-numero", post.numero);
-  establecerTexto("post-titulo", post.titulo);
-  establecerTexto("post-subtitulo", post.subtitulo);
-  establecerTexto("post-fecha", post.data);
-  const portada = document.getElementById("post-portada");
-  portada.replaceChildren(crearImagen(post.imagen, "post-portada-imagen"));
-  document.getElementById("post-narrativa").innerHTML = post.conteudoHTML;
-}
-
 if (pagina === "inicio") renderizarInicio();
-if (pagina === "post") renderizarPost();
